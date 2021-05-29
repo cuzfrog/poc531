@@ -9,4 +9,6 @@ public interface UserService {
 
     Role createRole(String name);
     void deleteRole(Role role);
+
+    void addRoleToUser(User user, Role roleToAdd);
 }

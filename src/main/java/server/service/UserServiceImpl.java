@@ -66,4 +66,10 @@ final class UserServiceImpl implements UserService {
     public void deleteRole(Role role) {
         roleRepository.delete(role);
     }
+
+    @Override
+    public void addRoleToUser(User user, Role roleToAdd) {
+        user.addRole(roleToAdd);
+        userRepository.upsert(user);
+    }
 }

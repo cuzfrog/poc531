@@ -88,4 +88,13 @@ final class UserServiceImplTest {
         userService.deleteRole(role);
         verify(roleRepository).delete(role);
     }
+
+    @Test
+    void addRoleToUser() {
+        Role role = new Role("r1");
+        User user = new User();
+        userService.addRoleToUser(user, role);
+        verify(userRepository).upsert(user);
+        assertThat(user.getRoles()).contains(role);
+    }
 }

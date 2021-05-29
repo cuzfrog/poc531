@@ -1,6 +1,7 @@
 package server.domain;
 
 import java.util.Collections;
+import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
 
@@ -25,6 +26,13 @@ public final class User {
 
     public void setRoles(Set<Role> roles) {
         this.roles = roles;
+    }
+
+    public void addRole(Role role) {
+        if (this.roles == null) {
+            this.roles = new HashSet<>(1); // assume in most cases user has only 1 role
+        }
+        this.roles.add(role);
     }
 
     public byte[] getPw() {
