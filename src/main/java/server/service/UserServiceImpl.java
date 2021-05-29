@@ -5,6 +5,7 @@ import server.domain.SaltStrategy;
 import server.domain.User;
 import server.repository.RoleRepository;
 import server.repository.UserRepository;
+import server.service.crypto.EncryptService;
 
 import static java.util.Objects.requireNonNull;
 

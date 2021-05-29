@@ -2,3 +2,4 @@
 
 ## Additional Info
 * `xxModule` is for DI module/context/config
+* `RuntimeException` in place of any business related exceptions.

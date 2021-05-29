@@ -1,4 +1,4 @@
-package server.service;
+package server.service.crypto;
 
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;

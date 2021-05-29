@@ -1,12 +1,16 @@
 package server.service;
 
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.TestInstance;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
+import org.mockito.Mockito;
 import server.domain.Role;
 import server.domain.User;
 import server.repository.RoleRepository;
 import server.repository.UserRepository;
+import server.service.crypto.EncryptService;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
@@ -16,11 +20,17 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
+@TestInstance(TestInstance.Lifecycle.PER_CLASS)
 final class UserServiceImplTest {
     private final EncryptService encryptService = mock(EncryptService.class);
     private final UserRepository userRepository = mock(UserRepository.class);
     private final RoleRepository roleRepository = mock(RoleRepository.class);
     private final UserServiceImpl userService = new UserServiceImpl(encryptService, userRepository, roleRepository);
+
+    @BeforeEach
+    void reset() {
+        Mockito.reset(encryptService, userRepository, roleRepository); // slightly faster than creating mock instance for each test
+    }
 
     @ParameterizedTest
     @CsvSource({
