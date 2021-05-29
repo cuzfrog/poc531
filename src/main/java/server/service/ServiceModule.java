@@ -10,10 +10,15 @@ public final class ServiceModule {
     }
 
     public static UserService userService() {
-        return new UserServiceImpl(
+        UserService actual = new UserServiceImpl(
                 EncryptService.getInstance(),
                 RepositoryModule.userRepository(),
                 RepositoryModule.roleRepository()
+        );
+        return new UserServiceValidateProxy(
+                RepositoryModule.userRepository(),
+                RepositoryModule.roleRepository(),
+                actual
         );
     }
 }

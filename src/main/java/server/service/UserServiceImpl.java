@@ -22,21 +22,12 @@ final class UserServiceImpl implements UserService {
 
     @Override
     public User createUser(String name, String pw) {
-        if (name == null || name.isEmpty() || pw == null || pw.isEmpty()) {
-            throw new IllegalArgumentException();
-        }
-
-        User existingUser = userRepository.findByName(name);
-        if (existingUser != null) {
-            throw new RuntimeException("User already exists, name:" + name);
-        }
-
         SaltStrategy saltStrategy = SaltStrategy.random();
 
-        User user = new User();
-        user.setName(name);
-        user.setPwSaltStrategy(saltStrategy);
-        user.setPw(encryptService.encrypt(pw, saltStrategy));
+        User user = User.builder()
+                .withName(name)
+                .withPw(encryptService.encrypt(pw, saltStrategy))
+                .withPwSaltStrategy(saltStrategy).build();
 
         userRepository.upsert(user);
         return user;
@@ -49,15 +40,6 @@ final class UserServiceImpl implements UserService {
 
     @Override
     public Role createRole(String name) {
-        if (name == null || name.isEmpty()) {
-            throw new IllegalArgumentException();
-        }
-
-        Role existingRole = roleRepository.findByName(name);
-        if (existingRole != null) {
-            throw new RuntimeException("Role already exists, name:" + name);
-        }
-
         Role role = new Role(name);
         roleRepository.upsert(role);
         return role;
@@ -70,17 +52,6 @@ final class UserServiceImpl implements UserService {
 
     @Override
     public void addRoleToUser(User user, Role roleToAdd) {
-        if (user == null || roleToAdd == null) {
-            throw new IllegalArgumentException();
-        }
-        if (user.getRoles().contains(roleToAdd)) {
-            return;
-        }
-        Role role = roleRepository.findByName(roleToAdd.getName());
-        if (role == null) {
-            throw new RuntimeException("Role does not exist");
-        }
-        user.addRole(role);
-        userRepository.upsert(user);
+        userRepository.upsert(user.update().addRole(roleToAdd).build());
     }
 }

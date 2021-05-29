@@ -51,8 +51,7 @@ final class InMemAuthServiceTest {
 
     @Test
     void authenticateWhenWrongPw() {
-        User existingUser = new User();
-        existingUser.setPw(new byte[]{1, 5});
+        User existingUser = User.builder().withPw(new byte[]{1, 5}).build();
         when(userRepository.findByName("user1")).thenReturn(existingUser);
         when(encryptService.encrypt(eq("pw3"), any())).thenReturn(new byte[]{1, 8});
         assertThatThrownBy(() -> authService.authenticate("user1", "pw3")).hasMessageContaining("failed");
@@ -60,9 +59,7 @@ final class InMemAuthServiceTest {
 
     @Test
     void authenticate() {
-        User existingUser = new User();
-        existingUser.setPw(new byte[]{1, 5});
-        existingUser.addRole(new Role("r3232"));
+        User existingUser = User.builder().addRole(new Role("r3232")).withPw(new byte[]{1, 5}).build();
         when(userRepository.findByName("user2")).thenReturn(existingUser);
         when(encryptService.encrypt(eq("pw3"), any())).thenReturn(new byte[]{1, 5});
         Instant creationTime = Instant.now();
