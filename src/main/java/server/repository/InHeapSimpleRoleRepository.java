@@ -19,7 +19,7 @@ final class InHeapSimpleRoleRepository implements RoleRepository {
     }
 
     @Override
-    public void delete(Role role) {
-        roles.remove(role.getName());
+    public void delete(String name) {
+        roles.remove(name);
     }
 }

@@ -46,9 +46,8 @@ final class UserServiceImplTest {
 
     @Test
     void deleteUser() {
-        User user = User.builder().build();
-        service.deleteUser(user);
-        verify(userRepository).delete(user);
+        service.deleteUser("user1");
+        verify(userRepository).delete("user1");
     }
 
     @Test
@@ -61,18 +60,18 @@ final class UserServiceImplTest {
 
     @Test
     void deleteRole() {
-        Role role = new Role("role3");
-        service.deleteRole(role);
-        verify(roleRepository).delete(role);
+        service.deleteRole("role3");
+        verify(roleRepository).delete("role3");
     }
 
     @Test
     void addRoleToUser() {
         Role role = new Role("r1");
         User user = User.builder().build();
+        when(userRepository.findByName("u1")).thenReturn(user);
         when(roleRepository.findByName("r1")).thenReturn(role);
 
-        service.addRoleToUser(user, role);
+        service.addRoleToUser("u1", role);
         ArgumentCaptor<User> userCaptor = ArgumentCaptor.forClass(User.class);
         verify(userRepository).upsert(userCaptor.capture());
         assertThat(userCaptor.getValue().getRoles()).contains(role);

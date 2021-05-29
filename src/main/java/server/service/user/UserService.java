@@ -7,12 +7,12 @@ import server.service.crypto.EncryptService;
 
 public interface UserService {
     User createUser(String name, String pw);
-    void deleteUser(User user);
+    void deleteUser(String name);
 
     Role createRole(String name);
-    void deleteRole(Role role);
+    void deleteRole(String name);
 
-    void addRoleToUser(User user, Role roleToAdd);
+    User addRoleToUser(String name, Role roleToAdd);
 
     static UserService getInstance() {
         UserService actual = new UserServiceImpl(

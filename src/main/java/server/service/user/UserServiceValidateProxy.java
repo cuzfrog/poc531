@@ -35,11 +35,11 @@ final class UserServiceValidateProxy implements UserService {
     }
 
     @Override
-    public void deleteUser(User user) {
-        if (User.ANONYMOUS_USER.equals(user)) {
+    public void deleteUser(String name) {
+        if (User.ANONYMOUS_USER.getName().equals(name)) {
             throw new IllegalArgumentException();
         }
-        delegate.deleteUser(user);
+        delegate.deleteUser(name);
     }
 
     @Override
@@ -56,25 +56,30 @@ final class UserServiceValidateProxy implements UserService {
     }
 
     @Override
-    public void deleteRole(Role role) {
-        delegate.deleteRole(role);
+    public void deleteRole(String name) {
+        delegate.deleteRole(name);
     }
 
     @Override
-    public void addRoleToUser(User user, Role roleToAdd) {
-        if (user == null || roleToAdd == null) {
+    public User addRoleToUser(String userName, Role roleToAdd) {
+        if (userName == null || roleToAdd == null) {
             throw new IllegalArgumentException();
         }
-        if (User.ANONYMOUS_USER.equals(user)) {
+        if (User.ANONYMOUS_USER.getName().equals(userName)) {
             throw new IllegalArgumentException("Role can't be added to the Anonymous user");
         }
-        if (user.getRoles().contains(roleToAdd)) {
-            return;
+        User existingUser = userRepository.findByName(userName);
+        if (existingUser == null) {
+            throw new RuntimeException("User does not exist");
+        }
+        if (existingUser.getRoles().contains(roleToAdd)) {
+            return existingUser;
         }
         Role role = roleRepository.findByName(roleToAdd.getName());
         if (role == null) {
             throw new RuntimeException("Role does not exist");
         }
-        delegate.addRoleToUser(user, roleToAdd);
+
+        return delegate.addRoleToUser(userName, roleToAdd);
     }
 }

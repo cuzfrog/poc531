@@ -34,8 +34,8 @@ final class UserServiceImpl implements UserService {
     }
 
     @Override
-    public void deleteUser(User user) {
-        userRepository.delete(user);
+    public void deleteUser(String name) {
+        userRepository.delete(name);
     }
 
     @Override
@@ -46,12 +46,15 @@ final class UserServiceImpl implements UserService {
     }
 
     @Override
-    public void deleteRole(Role role) {
-        roleRepository.delete(role);
+    public void deleteRole(String name) {
+        roleRepository.delete(name);
     }
 
     @Override
-    public void addRoleToUser(User user, Role roleToAdd) {
-        userRepository.upsert(user.update().addRole(roleToAdd).build());
+    public User addRoleToUser(String userName, Role roleToAdd) {
+        User existingUser = userRepository.findByName(userName);
+        User updated = existingUser.update().addRole(roleToAdd).build();
+        userRepository.upsert(updated);
+        return updated;
     }
 }

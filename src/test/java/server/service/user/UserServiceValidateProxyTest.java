@@ -41,7 +41,7 @@ final class UserServiceValidateProxyTest {
 
     @Test
     void cannotDeleteAnonymousUser() {
-        assertThatThrownBy(() -> proxy.deleteUser(User.ANONYMOUS_USER)).isInstanceOf(IllegalArgumentException.class);
+        assertThatThrownBy(() -> proxy.deleteUser(User.ANONYMOUS_USER.getName())).isInstanceOf(IllegalArgumentException.class);
     }
 
     @Test
@@ -60,10 +60,11 @@ final class UserServiceValidateProxyTest {
     @Test
     void addRoleToUserSkippedIfRoleAlreadyAssociated() {
         Role role = new Role("r1");
-        User user = User.builder().addRole(role).build();
+        User user = User.builder().withName("u3").addRole(role).build();
+        when(userRepository.findByName("u3")).thenReturn(user);
         when(roleRepository.findByName("r1")).thenReturn(role);
 
-        proxy.addRoleToUser(user, role);
+        proxy.addRoleToUser("u3", role);
         verify(userRepository, never()).upsert(user);
     }
 
@@ -71,15 +72,20 @@ final class UserServiceValidateProxyTest {
     void addRoleToUserFailWhenRoleNotExists() {
         Role role = new Role("r1");
         User user = User.builder().build();
+        when(userRepository.findByName("u4")).thenReturn(user);
+        assertThatThrownBy(() -> proxy.addRoleToUser("u4", role)).hasMessageContaining("not exist");
+    }
 
-        assertThatThrownBy(() -> proxy.addRoleToUser(user, role)).hasMessageContaining("not exist");
+    @Test
+    void addRoleToUserFailWhenUserNotExists() {
+        Role role = new Role("r1");
+        when(roleRepository.findByName("r1")).thenReturn(role);
+        assertThatThrownBy(() -> proxy.addRoleToUser("uuu", role)).hasMessageContaining("not exist");
     }
 
     @Test
     void addRoleToUserFailForAnonymousUser() {
         Role role = new Role("r1");
-        User user = User.ANONYMOUS_USER;
-
-        assertThatThrownBy(() -> proxy.addRoleToUser(user, role)).hasMessageContaining("Anonymous");
+        assertThatThrownBy(() -> proxy.addRoleToUser(User.ANONYMOUS_USER.getName(), role)).hasMessageContaining("Anonymous");
     }
 }

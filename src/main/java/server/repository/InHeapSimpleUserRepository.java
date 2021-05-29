@@ -19,7 +19,7 @@ final class InHeapSimpleUserRepository implements UserRepository {
     }
 
     @Override
-    public void delete(User user) {
-        users.remove(user.getName());
+    public void delete(String name) {
+        users.remove(name);
     }
 }
