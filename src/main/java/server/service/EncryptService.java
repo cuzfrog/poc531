@@ -2,6 +2,6 @@ package server.service;
 
 import server.domain.SaltStrategy;
 
-interface EncryptService {
+public interface EncryptService {
     byte[] encrypt(String input, SaltStrategy saltStrategy);
 }
