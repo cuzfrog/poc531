@@ -17,6 +17,7 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -103,8 +104,29 @@ final class UserServiceImplTest {
     void addRoleToUser() {
         Role role = new Role("r1");
         User user = new User();
+        when(roleRepository.findByName("r1")).thenReturn(role);
+
         userService.addRoleToUser(user, role);
         verify(userRepository).upsert(user);
         assertThat(user.getRoles()).contains(role);
+    }
+
+    @Test
+    void addRoleToUserSkippedIfRoleAlreadyAssociated() {
+        Role role = new Role("r1");
+        User user = new User();
+        user.addRole(role);
+        when(roleRepository.findByName("r1")).thenReturn(role);
+
+        userService.addRoleToUser(user, role);
+        verify(userRepository, never()).upsert(user);
+    }
+
+    @Test
+    void addRoleToUserFailWhenRoleNotExists() {
+        Role role = new Role("r1");
+        User user = new User();
+
+        assertThatThrownBy(() -> userService.addRoleToUser(user, role)).hasMessageContaining("not exist");
     }
 }

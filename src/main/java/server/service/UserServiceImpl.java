@@ -70,8 +70,17 @@ final class UserServiceImpl implements UserService {
 
     @Override
     public void addRoleToUser(User user, Role roleToAdd) {
-        // TODO, validate role
-        user.addRole(roleToAdd);
+        if (user == null || roleToAdd == null) {
+            throw new IllegalArgumentException();
+        }
+        if (user.getRoles().contains(roleToAdd)) {
+            return;
+        }
+        Role role = roleRepository.findByName(roleToAdd.getName());
+        if (role == null) {
+            throw new RuntimeException("Role does not exist");
+        }
+        user.addRole(role);
         userRepository.upsert(user);
     }
 }
