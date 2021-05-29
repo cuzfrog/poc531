@@ -1,4 +1,9 @@
 package server.repository;
 
-interface RoleRepository {
+import server.domain.Role;
+
+public interface RoleRepository {
+    void upsert(Role role);
+    Role findByName(String name);
+    void delete(Role role);
 }
