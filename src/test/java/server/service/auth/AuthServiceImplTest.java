@@ -23,13 +23,13 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
-final class InMemAuthServiceTest {
+final class AuthServiceImplTest {
     private static final long TOKEN_DURATION_MS = 10;
     private final TokenRepository tokenRepository = mock(TokenRepository.class);
     private final EncryptService encryptService = mock(EncryptService.class);
     private final UserRepository userRepository = mock(UserRepository.class);
     private final TimeService timeService = mock(TimeService.class);
-    private final AuthService authService = new InMemAuthService(tokenRepository, encryptService, userRepository, timeService, TOKEN_DURATION_MS);
+    private final AuthService authService = new AuthServiceImpl(tokenRepository, encryptService, userRepository, timeService, TOKEN_DURATION_MS);
     private final ArgumentCaptor<Token> tokenCaptor = ArgumentCaptor.forClass(Token.class);
 
     private final Instant aFutureTime = Instant.now().plus(5, ChronoUnit.HOURS);
@@ -55,6 +55,12 @@ final class InMemAuthServiceTest {
         when(userRepository.findByName("user1")).thenReturn(existingUser);
         when(encryptService.encrypt(eq("pw3"), any())).thenReturn(new byte[]{1, 8});
         assertThatThrownBy(() -> authService.authenticate("user1", "pw3")).hasMessageContaining("failed");
+    }
+
+    @Test
+    void authenticateAsAnonymous() {
+        assertThat(authService.authenticate("anonymous", "pw3")).isEqualTo(AuthServiceImpl.ANONYMOUS_TOKEN);
+        assertThat(authService.authenticateAsAnonymous()).isEqualTo(AuthServiceImpl.ANONYMOUS_TOKEN);
     }
 
     @Test
@@ -97,11 +103,15 @@ final class InMemAuthServiceTest {
     }
 
     @Test
+    void authorizeFailForAnonymousUser() {
+        assertThat(authService.authorize(AuthServiceImpl.ANONYMOUS_TOKEN, new Role("any"))).isFalse();
+    }
+
+    @Test
     void authorizeFailWhenNoSuchToken() {
         when(timeService.now()).thenReturn(aFutureTime.minus(1, ChronoUnit.HOURS));
         assertThatThrownBy(() -> authService.authorize("abc", new Role("r3"))).hasMessageContaining("Invalid");
         assertThatThrownBy(() -> authService.allRoles("abc")).hasMessageContaining("Invalid");
-
     }
 
     @Test
@@ -122,5 +132,10 @@ final class InMemAuthServiceTest {
         when(timeService.now()).thenReturn(aFutureTime.minus(1, ChronoUnit.HOURS));
 
         assertThat(authService.allRoles("abc")).containsExactlyInAnyOrder(r1, r2);
+    }
+
+    @Test
+    void getNoRolesForAnonymousUser() {
+        assertThat(authService.allRoles(AuthServiceImpl.ANONYMOUS_TOKEN)).isEmpty();
     }
 }
