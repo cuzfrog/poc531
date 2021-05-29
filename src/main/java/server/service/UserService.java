@@ -1,5 +1,8 @@
 package server.service;
 
+import server.domain.User;
+
 public interface UserService {
-    void createUser(String name, String pw);
+    User createUser(String name, String pw);
+    void deleteUser(User user);
 }

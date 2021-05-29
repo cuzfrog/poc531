@@ -38,9 +38,23 @@ final class UserServiceImplTest {
 
     @Test
     void saveUser() {
-         userService.createUser("myname", "mypass");
-         verify(encryptService).encrypt(anyString(), any());
-         verify(repository).findByName("myname");
-         verify(repository).upsert(any());
+        byte[] encryptedPw = new byte[]{1,2,3};
+        when(encryptService.encrypt(anyString(), any())).thenReturn(encryptedPw);
+
+        User user = userService.createUser("myname", "mypass");
+        verify(encryptService).encrypt(anyString(), any());
+        verify(repository).findByName("myname");
+        verify(repository).upsert(any());
+
+        assertThat(user.getName()).isEqualTo("myname");
+        assertThat(user.getPw()).isEqualTo(encryptedPw);
+        assertThat(user.getPwSaltStrategy()).isNotNull();
+    }
+
+    @Test
+    void deleteUser() {
+        User user = new User();
+        userService.deleteUser(user);
+        verify(repository).delete(user);
     }
 }

@@ -14,7 +14,7 @@ final class UserServiceImpl implements UserService {
     }
 
     @Override
-    public void createUser(String name, String pw) {
+    public User createUser(String name, String pw) {
         if (name == null || name.isEmpty() || pw == null || pw.isEmpty()) {
             throw new IllegalArgumentException();
         }
@@ -32,5 +32,11 @@ final class UserServiceImpl implements UserService {
         user.setPw(encryptService.encrypt(pw, saltStrategy));
 
         userRepository.upsert(user);
+        return user;
+    }
+
+    @Override
+    public void deleteUser(User user) {
+        userRepository.delete(user);
     }
 }
