@@ -1,4 +1,4 @@
-package server.service;
+package server.service.user;
 
 import server.domain.Role;
 import server.domain.User;

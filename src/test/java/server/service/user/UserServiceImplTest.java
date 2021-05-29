@@ -1,4 +1,4 @@
-package server.service;
+package server.service.user;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;

@@ -1,8 +1,7 @@
 package server.service;
 
-import server.repository.RepositoryModule;
 import server.service.auth.AuthService;
-import server.service.crypto.EncryptService;
+import server.service.user.UserService;
 
 public final class ServiceModule {
     public static AuthService authService() {
@@ -10,15 +9,6 @@ public final class ServiceModule {
     }
 
     public static UserService userService() {
-        UserService actual = new UserServiceImpl(
-                EncryptService.getInstance(),
-                RepositoryModule.userRepository(),
-                RepositoryModule.roleRepository()
-        );
-        return new UserServiceValidateProxy(
-                RepositoryModule.userRepository(),
-                RepositoryModule.roleRepository(),
-                actual
-        );
+        return UserService.getInstance();
     }
 }
