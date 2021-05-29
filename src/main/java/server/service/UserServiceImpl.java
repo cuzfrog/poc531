@@ -70,6 +70,7 @@ final class UserServiceImpl implements UserService {
 
     @Override
     public void addRoleToUser(User user, Role roleToAdd) {
+        // TODO, validate role
         user.addRole(roleToAdd);
         userRepository.upsert(user);
     }
