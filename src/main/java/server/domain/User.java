@@ -1,5 +1,7 @@
 package server.domain;
 
+import server.service.crypto.SaltStrategy;
+
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.Objects;

@@ -1,6 +1,5 @@
 package server.service.crypto;
 
-import server.domain.SaltStrategy;
 import server.support.annotation.VisibleForTesting;
 
 import java.nio.charset.StandardCharsets;

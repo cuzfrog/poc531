@@ -1,4 +1,4 @@
-package server.domain;
+package server.service.crypto;
 
 import java.util.concurrent.ThreadLocalRandom;
 

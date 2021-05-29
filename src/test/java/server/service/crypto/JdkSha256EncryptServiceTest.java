@@ -6,7 +6,6 @@ import org.junit.jupiter.api.TestInstance;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.converter.ConvertWith;
 import org.junit.jupiter.params.provider.CsvSource;
-import server.domain.SaltStrategy;
 import server.test.support.junit.ByteArrayConverter;
 
 import static org.assertj.core.api.Assertions.assertThat;

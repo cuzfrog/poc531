@@ -1,7 +1,7 @@
 package server.service;
 
 import server.domain.Role;
-import server.domain.SaltStrategy;
+import server.service.crypto.SaltStrategy;
 import server.domain.User;
 import server.repository.RoleRepository;
 import server.repository.UserRepository;
