@@ -1,7 +1,6 @@
 # POC 20210531
 
-## Gotta
-* APIs implemented as 2 major services `AuthService`, `UserService`
-* `xxModule`s in place of DI module/context/config.
+* APIs implemented as 2 major services `AuthService`, `UserService`, see `ExampleAcceptanceTest`
+* `XxxModule`s are in place of DI module/context/config.
 * `RuntimeException` in place of any business related exceptions.
-* Didn't write tests for simple in-memory repos.
+* Comments made in code base.

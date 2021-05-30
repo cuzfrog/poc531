@@ -2,7 +2,6 @@ package server;
 
 import org.junit.jupiter.api.Test;
 import server.domain.Role;
-import server.domain.User;
 import server.service.ServiceModule;
 import server.service.auth.AuthService;
 import server.service.user.UserService;

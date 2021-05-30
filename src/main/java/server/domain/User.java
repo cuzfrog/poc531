@@ -15,6 +15,8 @@ public final class User {
     private final Set<Role> roles;
     private final byte[] pw;
     private final SaltStrategy pwSaltStrategy;
+    // for simplicity's sake: pw and pwSaltStrategy directly stored with User;
+    // user has dependency on SaltStrategy, which can be prevented by storing credential in another entity.
 
     private User(String name, Set<Role> roles, byte[] pw, SaltStrategy pwSaltStrategy) {
         this.name = name;
